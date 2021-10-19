@@ -29,8 +29,10 @@ Vagrant.configure("2") do |config|
   #config.vm.provision :shell, :inline => 'sed -i -e "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config'
   #config.vm.provision :shell, :inline => 'sudo service sshd restart'
   config.vm.provision "shell", inline: <<-SHELL
-     sudo apt update && sudo apt install -y git
-     git clone https://github.com/redis/redis.git
+     sudo apt update 2>/dev/null | grep packages | cut -d '.' -f 1 && sudo apt install -y git libssl-dev libsystemd-dev build-essential pkg-config 2>/dev/null | grep packages
+     git clone https://github.com/redis/redis.git && cd redis && sudo make USE_SYSTEMD=yes BUILD_TLS=yes && sudo make test
+
+
   SHELL
   #
 
@@ -45,7 +47,7 @@ Vagrant.configure("2") do |config|
    vb.customize ["modifyvm", :id, "--memory", "512"]
    vb.customize ["modifyvm", :id, "--vram", "128"]
    vb.customize ["modifyvm", :id, "--cpus", "1"]
-   vb.customize ["modifyvm", :id, "--cpuexecutioncap", "75"]
+   vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
    # vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
    # vb.customize ["modifyvm", :id, "--ioapic", "on"]
    # vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
