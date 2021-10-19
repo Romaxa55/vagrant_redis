@@ -30,8 +30,8 @@ Vagrant.configure("2") do |config|
   #config.vm.provision :shell, :inline => 'sudo service sshd restart'
   config.vm.provision "shell", inline: <<-SHELL
      sudo apt update 2>/dev/null | grep packages | cut -d '.' -f 1 && sudo apt install -y git libssl-dev libsystemd-dev build-essential pkg-config 2>/dev/null | grep packages
-     git clone https://github.com/redis/redis.git && cd redis && sudo make USE_SYSTEMD=yes BUILD_TLS=yes && sudo make test
-
+     git clone https://github.com/redis/redis.git && cd redis && sudo make USE_SYSTEMD=yes BUILD_TLS=yes && sudo make test && sudo make install
+     echo "Ок, сценарий завершен"
 
   SHELL
   #
