@@ -1,4 +1,5 @@
-Vagrant.configure(2) do |config|
+
+Vagrant.configure("2") do |config|
   # Стандартная Ubuntu 20.04 
   config.vm.box = "bento/ubuntu-20.04"
   # Create a private network, which allows host-only access to the machine
@@ -7,16 +8,16 @@ Vagrant.configure(2) do |config|
   # NETWORK
   # https://www.vagrantup.com/docs/networking/public_network.html        
   #################################################################
-  config.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi (AirPort)"
+  # config.vm.network "public_network", bridge: "Intel(R) 82579LM Gigabit Network Connection"
+  # config.vm.network "public_network", type: "dhcp", bridge: "en0: Wi-Fi (AirPort)"
   config.vm.network 'private_network', ip: "192.168.130.10", auto_config: "false"                                                                                   
-  config.vm.network 'private_network', ip: "192.168.130.20", auto_config: "false"
-  config.vm.network 'private_network', ip: "192.168.130.30", auto_config: "false"
-  config.vm.network 'private_network', ip: "192.168.130.40", auto_config: "false"
+  # config.vm.network 'private_network', ip: "192.168.130.20", auto_config: "false"
+  # config.vm.network 'private_network', ip: "192.168.130.30", auto_config: "false"
+  # config.vm.network 'private_network', ip: "192.168.130.40", auto_config: "false"
   #config.vm.network :forwarded_port, guest: 5601, host: 5601
   #config.ssh.port = 2222
   #config.ssh.host = "192.168.130.10"
   #config.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", auto_correct: true
-  config.vm.provision :shell, :inline => 'sudo service network restart'
   #################################################################
   # SSH
   ################################################################# 
@@ -24,14 +25,14 @@ Vagrant.configure(2) do |config|
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'" # avoids 'stdin: is not a tty' error.
   config.vm.hostname = "server"
   config.ssh.username = "vagrant"
-  confg.ssh.password = "vagrant"
+  config.ssh.password = "vagrant"
   #config.vm.provision :shell, :inline => 'sed -i -e "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config'
   #config.vm.provision :shell, :inline => 'sudo service sshd restart'
-  # config.vm.provision "shell", inline: <<-SHELL
-  #    sudo sed -i -e "\\#PasswordAuthentication no# s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
-  #    sudo service ssh restart
-  #  SHELL
-  # #
+  config.vm.provision "shell", inline: <<-SHELL
+     sudo apt update && sudo apt install -y git
+     git clone https://github.com/redis/redis.git
+  SHELL
+  #
 
   ##################################################################
   # VIRTUALBOX conficurations
